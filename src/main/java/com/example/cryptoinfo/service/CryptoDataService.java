@@ -10,6 +10,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClients;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,9 +31,11 @@ public class CryptoDataService {
     private static final String API_URL = "https://api.coincap.io/v2/assets";
 
     private final CryptoDataRepository cryptoDataRepository;
+    private final ModelMapper modelMapper;
 
-    public CryptoDataService(CryptoDataRepository cryptoDataRepository) {
+    public CryptoDataService(CryptoDataRepository cryptoDataRepository, ModelMapper modelMapper) {
         this.cryptoDataRepository = cryptoDataRepository;
+        this.modelMapper = modelMapper;
     }
 
     @Transactional
@@ -83,7 +86,16 @@ public class CryptoDataService {
     }
         return cryptoDataDTOList;
     }
+
     private List<CryptoData> mapToEntities(List<CryptoDataDTO> cryptoDataDTOList) {
+        List<CryptoData> cryptoDataList = new ArrayList<>();
+        for (CryptoDataDTO dto : cryptoDataDTOList) {
+            CryptoData entity = modelMapper.map(dto, CryptoData.class);
+            cryptoDataList.add(entity);
+        }
+        return cryptoDataList;
+    }
+    /*private List<CryptoData> mapToEntities(List<CryptoDataDTO> cryptoDataDTOList) {
         List<CryptoData> cryptoDataList = new ArrayList<>();
         for (CryptoDataDTO dto : cryptoDataDTOList) {
             CryptoData entity = new CryptoData();
@@ -95,5 +107,5 @@ public class CryptoDataService {
             cryptoDataList.add(entity);
         }
         return cryptoDataList;
-    }
+    }*/
 }
