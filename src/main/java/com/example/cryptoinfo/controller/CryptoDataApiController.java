@@ -11,13 +11,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/crypto")
-public class CryptoDataController {
+public class CryptoDataApiController {
     private final CryptoDataService cryptoDataService;
 
     @Value("${coincap.api.key}")
     private String apiKey;
 
-    public CryptoDataController(CryptoDataService cryptoDataService) {
+    public CryptoDataApiController(CryptoDataService cryptoDataService) {
         this.cryptoDataService = cryptoDataService;
     }
 

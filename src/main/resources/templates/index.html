@@ -1,28 +1,60 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en" dir="ltr" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="utf-8">
-    <title>Crypto Chart</title>
+    <meta charset="UTF-8">
+    <title>Crypto Dashboard</title>
 </head>
 <body>
-<h2>Binance Crypto Chart</h2>
-<label for="symbol">Select Cryptocurrency:</label>
-<select id="symbol">
-    <option value="BTCUSDT">Bitcoin</option>
-    <option value="ETHUSDT">Ethereum</option>
-</select>
+<h2>Crypto Dashboard</h2>
+<div>
+    <button onclick="window.location.href='/cryptoChart'">View Chart</button>
+    <button onclick="window.location.href='/cryptoData'">View Data</button>
+</div>
 
-<label for="interval">Select Timeframe:</label>
-<select id="interval">
-    <option value="1m">1 Minute</option>
-    <option value="1d">1 Day</option>
-    <option value="1w">1 Week</option>
-    <option value="1M">1 Month</option>
-</select>
+<div th:if="${view == 'chart'}">
+    <h2>Binance Crypto Chart</h2>
+    <label for="symbol">Select Cryptocurrency:</label>
+    <select id="symbol">
+        <option value="BTCUSDT">Bitcoin</option>
+        <option value="ETHUSDT">Ethereum</option>
+    </select>
 
-<div id="tvchart"></div>
+    <label for="interval">Select Timeframe:</label>
+    <select id="interval">
+        <option value="1m">1 Minute</option>
+        <option value="1d">1 Day</option>
+        <option value="1w">1 Week</option>
+        <option value="1M">1 Month</option>
+    </select>
 
-<script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
-<script type="text/javascript" src="index.js"></script>
+    <div id="tvchart"></div>
+
+    <script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
+    <script type="text/javascript" src="/index.js"></script>
+</div>
+
+<div th:if="${view == 'data'}">
+    <h2>Cryptocurrency Data</h2>
+    <table border="1">
+        <thead>
+        <tr>
+            <th>Currency</th>
+            <th>Price (USD)</th>
+            <th>Market Cap (USD)</th>
+            <th>Volume (24Hr USD)</th>
+            <th>Timestamp</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="data : ${cryptoData}">
+            <td th:text="${data.currency}"></td>
+            <td th:text="${data.price}"></td>
+            <td th:text="${data.marketCap}"></td>
+            <td th:text="${data.volume}"></td>
+            <td th:text="${data.timestamp}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
 </body>
 </html>
