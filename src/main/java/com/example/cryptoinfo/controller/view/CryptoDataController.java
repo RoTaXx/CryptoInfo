@@ -41,7 +41,7 @@ public class CryptoDataController {
 
     @GetMapping("/cryptoData")
     public String getCryptoData(Model model) {
-        List<CryptoDataDTO> cryptoDataDTOList = cryptoDataService.fetchAndSaveCryptoData(apiKey);
+        List<CryptoDataDTO> cryptoDataDTOList = cryptoDataService.fetchAndSaveCryptoData();
         List<CryptoDataViewModel> cryptoDataViewModelList = cryptoDataDTOList.stream()
                 .map(dto -> modelMapper.map(dto, CryptoDataViewModel.class))
                 .collect(Collectors.toList());

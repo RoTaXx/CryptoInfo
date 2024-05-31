@@ -11,6 +11,10 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClients;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,10 +32,14 @@ import java.util.List;
 @Service
 public class CryptoDataService {
 
+    private static final Logger logger = LoggerFactory.getLogger(CryptoDataService.class);
     private static final String API_URL = "https://api.coincap.io/v2/assets";
 
     private final CryptoDataRepository cryptoDataRepository;
     private final ModelMapper modelMapper;
+
+    @Value("${coincap.api.key}")
+    private String apiKey;
 
     public CryptoDataService(CryptoDataRepository cryptoDataRepository, ModelMapper modelMapper) {
         this.cryptoDataRepository = cryptoDataRepository;
@@ -39,7 +47,9 @@ public class CryptoDataService {
     }
 
     @Transactional
-    public List<CryptoDataDTO> fetchAndSaveCryptoData(String apiKey){
+    public List<CryptoDataDTO> fetchAndSaveCryptoData(){
+        logger.info("Fetching crypto data from API...");
+        cryptoDataRepository.deleteAll();
         List<CryptoDataDTO> cryptoDataDTOList = new ArrayList<>();
         HttpClient httpClient = HttpClients.createDefault();
         HttpGet httpGet = new HttpGet(API_URL);
@@ -76,13 +86,16 @@ public class CryptoDataService {
                 }
             } else {
                 System.out.println("No data found in the response.");
+                logger.warn("No data found in the response.");
             }
 
             List<CryptoData> cryptoDataList = mapToEntities(cryptoDataDTOList);
             cryptoDataRepository.saveAll(cryptoDataList);
+            logger.info("Crypto data saved to database.");
         }
         } catch (IOException e){
         e.printStackTrace();
+        logger.error("Error fetching crypto data", e);
     }
         return cryptoDataDTOList;
     }

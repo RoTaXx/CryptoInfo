@@ -23,6 +23,6 @@ public class CryptoDataApiController {
 
     @GetMapping
     public List<CryptoDataDTO> updateCryptoData() {
-        return cryptoDataService.fetchAndSaveCryptoData(apiKey);
+        return cryptoDataService.fetchAndSaveCryptoData();
     }
 }
