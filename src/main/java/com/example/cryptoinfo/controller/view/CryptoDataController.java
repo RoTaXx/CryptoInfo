@@ -50,4 +50,16 @@ public class CryptoDataController {
         return "cryptoData";
     }
 
+    @GetMapping("/cryptoData/sortByPrice")
+    public String getCryptoDataSortedByPrice(Model model) {
+        List<CryptoDataDTO> cryptoDataDTOList = cryptoDataService.fetchAndSaveCryptoData();
+        List<CryptoDataDTO> sortedCryptoDataDTOList = cryptoDataService.sortByPrice(cryptoDataDTOList);
+        List<CryptoDataViewModel> cryptoDataViewModelList = sortedCryptoDataDTOList.stream()
+                .map(dto -> modelMapper.map(dto, CryptoDataViewModel.class))
+                .collect(Collectors.toList());
+
+        model.addAttribute("cryptoData", cryptoDataViewModelList);
+        return "cryptoData";
+    }
+
 }
