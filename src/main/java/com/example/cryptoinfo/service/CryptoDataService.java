@@ -99,6 +99,21 @@ public class CryptoDataService {
         return cryptoDataDTOList;
     }
 
+
+    public List<CryptoDataDTO> sortByPrice(List<CryptoDataDTO> cryptoDataDTOList) {
+        int n = cryptoDataDTOList.size();
+        for (int i = 0; i < n - 1; i++) {
+            for (int j = 0; j < n - i - 1; j++) {
+                if (cryptoDataDTOList.get(j).getPrice() > cryptoDataDTOList.get(j + 1).getPrice()) {
+                    CryptoDataDTO temp = cryptoDataDTOList.get(j);
+                    cryptoDataDTOList.set(j, cryptoDataDTOList.get(j + 1));
+                    cryptoDataDTOList.set(j + 1, temp);
+                }
+            }
+        }
+        return cryptoDataDTOList;
+    }
+
     private List<CryptoData> mapToEntities(List<CryptoDataDTO> cryptoDataDTOList) {
         List<CryptoData> cryptoDataList = new ArrayList<>();
         for (CryptoDataDTO dto : cryptoDataDTOList) {
